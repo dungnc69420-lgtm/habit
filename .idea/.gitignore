@@ -1,8 +1,45 @@
-# Default ignored files
-/shelf/
-/workspace.xml
-# Editor-based HTTP Client requests
-/httpRequests/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
+# IntelliJ
+.idea/
+*.iml
+
+# Maven
+target/
+**/target/
+
+# Gradle
+.gradle/
+build/
+
+# Logs
+*.log
+logs/
+*.out
+
+# Spring Boot
+application-local.yml
+application-local.properties
+
+# Node / React
+node_modules/
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.production.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor HTTP requests
+httpRequests/
+
+# IntelliJ shelves
+shelf/
+
+# Datasources
+dataSources/
+dataSources.local.xml
