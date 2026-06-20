@@ -1,22 +1,27 @@
 package com.habit.dto.response;
 
+import com.habit.enums.GoalPeriod;
 import com.habit.enums.HabitType;
+import com.habit.model.HabitCategory;
 import com.habit.model.HabitTemplate;
 import lombok.Builder;
+import org.apache.logging.log4j.util.Strings;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Builder
 public record HabitTemplateResponse(
         UUID id,
         String name,
-        String emoji,
+        String icon,
         HabitType habitType,
         String color,
         BigDecimal goalValue,
         String goalUnit,
-        String goalPeriod
+        GoalPeriod goalPeriod,
+        List<String> category
 ) {
     public static HabitTemplateResponse from(
             HabitTemplate entity
@@ -28,8 +33,9 @@ public record HabitTemplateResponse(
                 entity.getHabitType(),
                 entity.getColor(),
                 entity.getGoalValue(),
-                entity.getGoalUnit(),
-                entity.getGoalPeriod()
+                entity.getGoalUnit() == null ? Strings.EMPTY : entity.getGoalUnit().getName(),
+                GoalPeriod.DAILY,
+                entity.getCategories().stream().map(HabitCategory::getId).toList()
         );
     }
 }

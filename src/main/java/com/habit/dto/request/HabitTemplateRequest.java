@@ -1,5 +1,6 @@
 package com.habit.dto.request;
 
+import com.habit.enums.GoalPeriod;
 import com.habit.enums.HabitType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,7 +26,7 @@ public record HabitTemplateRequest(
         String goalUnit,
         
         @NotBlank
-        String goalPeriod
+        GoalPeriod goalPeriod
 
 ) {
 }

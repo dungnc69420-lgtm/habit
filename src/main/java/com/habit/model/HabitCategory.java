@@ -1,11 +1,9 @@
 package com.habit.model;
 
-import com.habit.enums.GoalUnitCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,30 +13,27 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "goal_unit")
+@Table(name = "habit_category")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class GoalUnit extends AuditableEntity {
-
-    @Id
-    UUID id;
-
-    @Column(nullable = false, length = 50)
-    String name;
-
-    @Column(length = 20)
-    String symbol;
+public class HabitCategory {
     
-    @Enumerated(EnumType.STRING)
-    GoalUnitCategory category;
-
-    @Column(name = "is_system")
-    boolean isSystem;
+    @Id
+    String id;
+    
+    @Column(nullable = false)
+    String name;
+    
+    String icon;
+    
+    @ManyToMany(mappedBy = "categories")
+    Set<HabitTemplate> templates = new HashSet<>();
 }

@@ -2,12 +2,15 @@ package com.habit.service.impl;
 
 import com.habit.dto.request.HabitTemplateRequest;
 import com.habit.dto.response.HabitTemplateResponse;
+import com.habit.model.GoalUnit;
 import com.habit.model.HabitTemplate;
 import com.habit.repository.HabitTemplateRepository;
+import com.habit.service.GoalUnitService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +22,9 @@ import java.util.UUID;
 public class HabitTemplateServiceImpl {
     
     HabitTemplateRepository repository;
+    GoalUnitService goalUnitService;
     
+    @Cacheable("habitTemplates")
     public List<HabitTemplateResponse> getAll() {
         return repository.findAll()
                 .stream()
@@ -41,6 +46,8 @@ public class HabitTemplateServiceImpl {
     
     public HabitTemplateResponse create(HabitTemplateRequest request) {
         
+        GoalUnit goalUnit = getGoalUnit(request);
+        
         HabitTemplate template = HabitTemplate.builder()
                 .id(UUID.randomUUID())
                 .name(request.name())
@@ -48,13 +55,17 @@ public class HabitTemplateServiceImpl {
                 .habitType(request.habitType())
                 .color(request.color())
                 .goalValue(request.goalValue())
-                .goalUnit(request.goalUnit())
+                .goalUnit(goalUnit)
                 .goalPeriod(request.goalPeriod())
                 .build();
         
         return HabitTemplateResponse.from(
                 repository.save(template)
         );
+    }
+    
+    private GoalUnit getGoalUnit(HabitTemplateRequest request) {
+        return goalUnitService.getByNameAndCreator(request.goalUnit());
     }
     
     public HabitTemplateResponse update(
@@ -69,7 +80,7 @@ public class HabitTemplateServiceImpl {
         template.setHabitType(request.habitType());
         template.setColor(request.color());
         template.setGoalValue(request.goalValue());
-        template.setGoalUnit(request.goalUnit());
+        template.setGoalUnit(getGoalUnit(request));
         template.setGoalPeriod(request.goalPeriod());
         
         return HabitTemplateResponse.from(

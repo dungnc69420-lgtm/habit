@@ -21,28 +21,28 @@ import java.util.UUID;
 @RequestMapping("/api/habit-templates")
 @RequiredArgsConstructor
 public class HabitTemplateController {
-
+    
     private final HabitTemplateServiceImpl service;
-
+    
     @GetMapping
     public List<HabitTemplateResponse> getAll() {
         return service.getAll();
     }
-
+    
     @GetMapping("/{id}")
     public HabitTemplateResponse getById(
             @PathVariable UUID id
     ) {
         return service.getById(id);
     }
-
+    
     @PostMapping
     public HabitTemplateResponse create(
             @RequestBody @Valid HabitTemplateRequest request
     ) {
         return service.create(request);
     }
-
+    
     @PutMapping("/{id}")
     public HabitTemplateResponse update(
             @PathVariable UUID id,
@@ -50,7 +50,7 @@ public class HabitTemplateController {
     ) {
         return service.update(id, request);
     }
-
+    
     @DeleteMapping("/{id}")
     public void delete(
             @PathVariable UUID id

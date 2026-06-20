@@ -1,11 +1,16 @@
 package com.habit.model;
 
+import com.habit.enums.GoalPeriod;
 import com.habit.enums.HabitType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -17,6 +22,8 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -36,6 +43,7 @@ public class HabitTemplate extends AuditableEntity {
     
     String emoji;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "habit_type")
     HabitType habitType;
     
@@ -48,6 +56,15 @@ public class HabitTemplate extends AuditableEntity {
     @JoinColumn(name = "goal_unit_id")
     GoalUnit goalUnit;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "goal_period")
-    String goalPeriod;
+    GoalPeriod goalPeriod;
+    
+    @ManyToMany
+    @JoinTable(
+            name = "habit_template_category",
+            joinColumns = @JoinColumn(name = "template_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    Set<HabitCategory> categories = new HashSet<>();
 }
