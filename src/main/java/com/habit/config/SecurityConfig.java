@@ -2,6 +2,7 @@ package com.habit.config;
 
 import com.habit.security.JwtAuthFilter;
 import com.habit.security.OAuth2SuccessHandler;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,24 +60,34 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(s ->
+                        s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(
+                                (request, response, authException) -> {
+                                    response.sendError(
+                                            HttpServletResponse.SC_UNAUTHORIZED,
+                                            "Unauthorized"
+                                    );
+                                }
+                        )
+                )
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/oauth2/**",
                                 "/login/oauth2/**",
                                 "/h2-console/**"
-                        ).permitAll()
-                        // Everything else requires a valid JWT
-                        .anyRequest().authenticated()
+                        )
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated()
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .authorizationEndpoint(e -> e.baseUri("/oauth2/authorize"))
-                        .redirectionEndpoint(e -> e.baseUri("/login/oauth2/code/*"))
-                        .successHandler(oAuth2SuccessHandler)
-                )
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        .addFilterBefore(
+                jwtAuthFilter,
+                UsernamePasswordAuthenticationFilter.class
+        );
         
         return http.build();
     }

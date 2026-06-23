@@ -1,7 +1,10 @@
 package com.habit.model;
 
+import com.habit.enums.ScheduleType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -40,8 +43,9 @@ public class HabitSchedule {
     @JoinColumn(name = "habit_id")
     Habit habit;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "schedule_type")
-    String scheduleType;
+    ScheduleType scheduleType;
     
     @Column(name = "target_days")
     Integer targetDays;

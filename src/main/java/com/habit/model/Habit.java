@@ -1,5 +1,7 @@
 package com.habit.model;
 
+import com.habit.enums.GoalPeriod;
+import com.habit.enums.HabitStatus;
 import com.habit.enums.HabitType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -48,7 +50,8 @@ public class Habit extends AuditableEntity {
     @Column(name = "group_name")
     String groupName;
     
-    String status;
+    @Enumerated(EnumType.STRING)
+    HabitStatus status;
     
     String emoji;
     
@@ -65,8 +68,9 @@ public class Habit extends AuditableEntity {
     @JoinColumn(name = "goal_unit_id")
     GoalUnit goalUnit;
     
+    @Enumerated(EnumType.STRING)
     @Column(name = "goal_period")
-    String goalPeriod;
+    GoalPeriod goalPeriod;
     
     @Column(name = "start_time")
     LocalTime startTime;
@@ -80,15 +84,17 @@ public class Habit extends AuditableEntity {
     @Column(name = "end_date")
     LocalDateTime endDate;
     
-    @Column(name = "reminder_enabled")
-    Boolean reminderEnabled;
-    
-    @Column(name = "reminder_time")
-    LocalTime reminderTime;
-    
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "habit")
+    @OneToMany(
+            mappedBy = "habit",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
     List<HabitLog> habitLogs = new ArrayList<>();
     
-    @OneToOne(mappedBy = "habit")
+    @OneToOne(
+            mappedBy = "habit",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     HabitSchedule schedule;
 }

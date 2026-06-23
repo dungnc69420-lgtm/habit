@@ -33,7 +33,7 @@ public record HabitTemplateResponse(
                 entity.getHabitType(),
                 entity.getColor(),
                 entity.getGoalValue(),
-                entity.getGoalUnit() == null ? Strings.EMPTY : entity.getGoalUnit().getName(),
+                entity.getGoalUnit() == null ? Strings.EMPTY : entity.getGoalUnit().getSymbol(),
                 GoalPeriod.DAILY,
                 entity.getCategories().stream().map(HabitCategory::getId).toList()
         );

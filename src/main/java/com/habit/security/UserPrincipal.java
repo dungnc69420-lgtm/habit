@@ -28,7 +28,7 @@ public class UserPrincipal implements UserDetails {
     
     @Override
     public String getUsername() {
-        return String.valueOf(id);
+        return name;
     }
     
     @Override
@@ -48,7 +48,7 @@ public class UserPrincipal implements UserDetails {
     
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return false;
     }
     
     @Override
